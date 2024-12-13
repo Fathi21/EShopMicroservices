@@ -1,6 +1,13 @@
+using MediatR;
+
 namespace buildingBlocks.CQRS;
 
-public interface ICommand
+public interface ICommand : IRequest<Unit>
+{
+    
+}
+
+public interface ICommand<out TResponse>: IRequest<TResponse>
 {
     
 }
