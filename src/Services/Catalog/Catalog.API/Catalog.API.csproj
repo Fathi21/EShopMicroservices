@@ -12,10 +12,17 @@
     <ItemGroup>
       <PackageReference Include="Carter" Version="8.2.1" />
       <PackageReference Include="Mapster" Version="7.4.1-pre01" />
+      <PackageReference Include="Marten" Version="7.34.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="../../../buildingBlocks/buildingBlocks/buildingBlocks/buildingBlocks.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Update="docker-compose.override.yml">
+        <DependentUpon>docker-compose.yml</DependentUpon>
+      </None>
     </ItemGroup>
 
     
