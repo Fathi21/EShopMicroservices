@@ -1,16 +1,24 @@
-using Catalog.API.Product.GetProduct;
-
-namespace Catalog.API.Product.GetProductById;
 using Catalog.API.Models;
 
-public record GetProductByIdQuery(Guid Id) : IQuery<GetProductResult>;
 
-internal class GetProductByIdHandler(IDocumentSession session) : IQueryHandler<GetProductByIdQuery, GetProductResult>
+public record GetProductByResult(
+    Guid Id,
+    string Name,
+    List<string> Category,
+    string Description,
+    string ImageFile,
+    decimal Price);
+
+
+// Query for fetching a product by ID
+public record GetProductByIdQuery(Guid Id) : IQuery<GetProductByResult>;
+
+// Handler for the query
+internal class GetProductByIdHandler(IDocumentSession session) : IQueryHandler<GetProductByIdQuery, GetProductByResult>
 {
-    
-    public async Task<GetProductResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
+    public async Task<GetProductByResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
     {
-        // search product by Id from the database
+        // Search product by ID from the database
         var prod = await session.Query<Product>()
             .FirstOrDefaultAsync(p => p.Id == query.Id, cancellationToken);
 
@@ -18,8 +26,9 @@ internal class GetProductByIdHandler(IDocumentSession session) : IQueryHandler<G
         {
             throw new KeyNotFoundException($"Product with ID {query.Id} not found.");
         }
-        // Map product to GetProductResult and return one product
-        return new GetProductResult(
+
+        // Map product to GetProductByResult and return
+        return new GetProductByResult(
             prod.Id,
             prod.Name,
             prod.Category,
