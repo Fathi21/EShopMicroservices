@@ -1,40 +1,26 @@
 using Catalog.API.Models;
 
 
-public record GetProductByResult(
-    Guid Id,
-    string Name,
-    List<string> Category,
-    string Description,
-    string ImageFile,
-    decimal Price);
+public record GetProductByIdResult(Product Product);
 
 
 // Query for fetching a product by ID
-public record GetProductByIdQuery(Guid Id) : IQuery<GetProductByResult>;
+public record GetProductByIdQuery(Guid Id) : IQuery<GetProductByIdResult>;
 
 // Handler for the query
-internal class GetProductByIdHandler(IDocumentSession session) : IQueryHandler<GetProductByIdQuery, GetProductByResult>
+internal class GetProductByIdHandler(IDocumentSession session, ILogger<GetProductByIdHandler> logger) 
+    : IQueryHandler<GetProductByIdQuery, GetProductByIdResult>
 {
-    public async Task<GetProductByResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
+    public async Task<GetProductByIdResult> Handle(GetProductByIdQuery query, CancellationToken cancellationToken)
     {
         // Search product by ID from the database
-        var prod = await session.Query<Product>()
-            .FirstOrDefaultAsync(p => p.Id == query.Id, cancellationToken);
-
-        if (prod == null)
+        var product = await session.LoadAsync<Product>(query.Id, cancellationToken);
+        
+        if (product == null)
         {
             throw new KeyNotFoundException($"Product with ID {query.Id} not found.");
         }
 
-        // Map product to GetProductByResult and return
-        return new GetProductByResult(
-            prod.Id,
-            prod.Name,
-            prod.Category,
-            prod.Description,
-            prod.ImageFile,
-            prod.Price
-        );
+        return new GetProductByIdResult(product);
     }
 }

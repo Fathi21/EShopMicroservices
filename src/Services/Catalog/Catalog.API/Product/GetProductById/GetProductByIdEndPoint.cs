@@ -1,6 +1,8 @@
 namespace Catalog.API.Product.GetProductById;
-
 using Catalog.API.Product.GetProduct;
+using Catalog.API.Models;
+
+public record GetProductByIdResponse(Product Product);
 
 public class GetProductByIdEndPoint : ICarterModule
 {
@@ -17,7 +19,7 @@ public class GetProductByIdEndPoint : ICarterModule
                         // Send the query to the handler
                         var result = await sender.Send(query);
 
-                        var response = result.Adapt<GetProductByIdQuery>();
+                        var response = result.Adapt<GetProductByIdResponse>();
 
                         // Return the result directly
                         return Results.Ok(response);
