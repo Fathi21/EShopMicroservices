@@ -1,5 +1,6 @@
 using System.Text.Json.Serialization;
 using Catalog.API.Product.CreateProduct;
+using Catalog.API.Product.DeleteProductById;
 using Catalog.API.Product.GetProduct;
 using Catalog.API.Product.GetProductById;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,9 @@ using Microsoft.AspNetCore.Mvc;
 [JsonSerializable(typeof(CreateProductResponse))]
 [JsonSerializable(typeof(List<GetProductResult>))]  // Include list of results
 [JsonSerializable(typeof(GetProductByIdResponse))]
+[JsonSerializable(typeof(DeleteProductResult))]
+[JsonSerializable(typeof(DeleteProductByResponse))]
+
 
 internal partial class AppJsonContext : JsonSerializerContext
 {
